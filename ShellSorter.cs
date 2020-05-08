@@ -37,7 +37,78 @@ namespace Laba4_ShellSort
             Thread.Sleep(500);
         }
 
-        private void ShowCurrentNumberForComparison(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, )
+        private void ReturnAllNumsFromSelectedNums(ListBox listBoxForNums, ListBox listBoxForSelectedNums, int length, int startIndex, int step)
+        {
+            for (int i = startIndex; i < length; i += step)
+            {                
+                listBoxForNums.Items[i] = listBoxForSelectedNums.Items[i];
+                listBoxForSelectedNums.Items[i] = "";
+            }
+            listBoxForNums.Refresh();
+            listBoxForSelectedNums.Refresh();
+            Thread.Sleep(500);
+        }
+
+        private void ShowCurrentNumberForComparison(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i)
+        {
+            listBoxForSwapNums.Items[i] = listBoxForSelectedNums.Items[i];
+            listBoxForSelectedNums.Items[i] = "";
+            listBoxForSwapNums.Refresh();
+            listBoxForSelectedNums.Refresh();
+            Thread.Sleep(500);
+        }
+
+        private void ReturnNumber(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i)
+        {
+            listBoxForSelectedNums.Items[i] = listBoxForSwapNums.Items[i];
+            listBoxForSwapNums.Items[i] = "";
+            listBoxForSwapNums.Refresh();
+            listBoxForSelectedNums.Refresh();
+            Thread.Sleep(500);
+        }
+
+        private void ShowCompareNumbers(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i, int j, bool needExchange)
+        {
+            ShowCurrentNumberForComparison(listBoxForSelectedNums, listBoxForSwapNums, i);
+            ShowCurrentNumberForComparison(listBoxForSelectedNums, listBoxForSwapNums, j);
+            if (needExchange)
+            {
+                listBoxForSwapNums.BackColor = System.Drawing.Color.Green;
+                listBoxForSwapNums.Refresh();
+                Thread.Sleep(500);
+                listBoxForSwapNums.BackColor = System.Drawing.Color.White;
+                listBoxForSwapNums.Refresh();
+                Thread.Sleep(500);
+            }
+            else
+            {
+                listBoxForSwapNums.BackColor = System.Drawing.Color.Red;
+                listBoxForSwapNums.Refresh();
+                Thread.Sleep(500);
+                listBoxForSwapNums.BackColor = System.Drawing.Color.White;
+                listBoxForSwapNums.Refresh();
+                Thread.Sleep(500);
+            }
+            ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, i);
+            if (needExchange)
+            {
+                for (int k = i; k < j; k++)
+                {
+                    listBoxForSelectedNums.Items[k + 1] = listBoxForSelectedNums.Items[k];
+                }
+                listBoxForSelectedNums.Refresh();
+                Thread.Sleep(500);
+                listBoxForSwapNums.Items[i] = listBoxForSwapNums.Items[j];
+                listBoxForSwapNums.Items[j] = "";
+                listBoxForSwapNums.Refresh();
+                Thread.Sleep(500);
+                ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, i);
+            }
+            else
+            {
+                ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, j);
+            }
+        }
 
         public void Sort (int[] array, ListBox listBoxForNums, ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums)
         {
@@ -54,15 +125,19 @@ namespace Laba4_ShellSort
                     {
                         int elem = array[i];
                         int l = i - step;
-                        bool needExchande = elem < array[l];
-                        while ((l >= 0) && needExchande)
+                        bool needExchande = !(elem < array[l]);
+                        ShowCompareNumbers(listBoxForSelectedNums, listBoxForSwapNums, l, i, needExchande);
+                        while ((l >= 0) && !needExchande)
                         {
                             array[l + step] = array[l];
                             l -= step;
+                            needExchande = !(elem < array[l]);
+                            ShowCompareNumbers(listBoxForSelectedNums, listBoxForSwapNums, l, i, needExchande);
                         }
                         array[l + step] = elem;
                         i += step;
                     } // while
+                    ReturnAllNumsFromSelectedNums(listBoxForNums, listBoxForSelectedNums, array.Length, p, step);
                 } // for
             } // for
         }

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Laba4_ShellSort
@@ -15,6 +8,13 @@ namespace Laba4_ShellSort
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        private void buttonDemoMode_Click(object sender, EventArgs e)
+        {
+            DemoModeForm demoMode = new DemoModeForm();
+            Hide();
+            demoMode.ShowDialog();
         }
     }
 }

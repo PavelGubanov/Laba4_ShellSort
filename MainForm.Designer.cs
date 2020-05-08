@@ -42,6 +42,7 @@
             this.buttonDemoMode.TabIndex = 0;
             this.buttonDemoMode.Text = "Demo Mode";
             this.buttonDemoMode.UseVisualStyleBackColor = false;
+            this.buttonDemoMode.Click += new System.EventHandler(this.buttonDemoMode_Click);
             // 
             // buttonOperationMode
             // 

@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.listBoxForNums = new System.Windows.Forms.ListBox();
-            this.buttonDemoMode = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonSortArray = new System.Windows.Forms.Button();
+            this.buttonFillArrayWithRandomNumbers = new System.Windows.Forms.Button();
             this.listBoxForSelectedNums = new System.Windows.Forms.ListBox();
             this.listBoxForSwapNums = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
@@ -46,27 +46,30 @@
             this.listBoxForNums.Size = new System.Drawing.Size(178, 324);
             this.listBoxForNums.TabIndex = 0;
             // 
-            // buttonDemoMode
+            // buttonSortArray
             // 
-            this.buttonDemoMode.BackColor = System.Drawing.Color.LawnGreen;
-            this.buttonDemoMode.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDemoMode.Location = new System.Drawing.Point(120, 356);
-            this.buttonDemoMode.Name = "buttonDemoMode";
-            this.buttonDemoMode.Size = new System.Drawing.Size(178, 38);
-            this.buttonDemoMode.TabIndex = 1;
-            this.buttonDemoMode.Text = "Sort";
-            this.buttonDemoMode.UseVisualStyleBackColor = false;
+            this.buttonSortArray.BackColor = System.Drawing.Color.LawnGreen;
+            this.buttonSortArray.Enabled = false;
+            this.buttonSortArray.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonSortArray.Location = new System.Drawing.Point(21, 356);
+            this.buttonSortArray.Name = "buttonSortArray";
+            this.buttonSortArray.Size = new System.Drawing.Size(267, 41);
+            this.buttonSortArray.TabIndex = 1;
+            this.buttonSortArray.Text = "Sort";
+            this.buttonSortArray.UseVisualStyleBackColor = false;
+            this.buttonSortArray.Click += new System.EventHandler(this.buttonSortArray_Click);
             // 
-            // button1
+            // buttonFillArrayWithRandomNumbers
             // 
-            this.button1.BackColor = System.Drawing.Color.Cyan;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(313, 356);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(178, 38);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Fill random numbers";
-            this.button1.UseVisualStyleBackColor = false;
+            this.buttonFillArrayWithRandomNumbers.BackColor = System.Drawing.Color.Cyan;
+            this.buttonFillArrayWithRandomNumbers.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonFillArrayWithRandomNumbers.Location = new System.Drawing.Point(303, 356);
+            this.buttonFillArrayWithRandomNumbers.Name = "buttonFillArrayWithRandomNumbers";
+            this.buttonFillArrayWithRandomNumbers.Size = new System.Drawing.Size(266, 41);
+            this.buttonFillArrayWithRandomNumbers.TabIndex = 2;
+            this.buttonFillArrayWithRandomNumbers.Text = "Fill array with random numbers";
+            this.buttonFillArrayWithRandomNumbers.UseVisualStyleBackColor = false;
+            this.buttonFillArrayWithRandomNumbers.Click += new System.EventHandler(this.buttonFillArrayWithRandomNumbers_Click);
             // 
             // listBoxForSelectedNums
             // 
@@ -97,11 +100,12 @@
             this.ClientSize = new System.Drawing.Size(590, 409);
             this.Controls.Add(this.listBoxForSwapNums);
             this.Controls.Add(this.listBoxForSelectedNums);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.buttonDemoMode);
+            this.Controls.Add(this.buttonFillArrayWithRandomNumbers);
+            this.Controls.Add(this.buttonSortArray);
             this.Controls.Add(this.listBoxForNums);
             this.Name = "DemoModeForm";
             this.Text = "Demo Mode";
+            this.Load += new System.EventHandler(this.DemoModeForm_Load);
             this.ResumeLayout(false);
 
         }
@@ -109,8 +113,8 @@
         #endregion
 
         private System.Windows.Forms.ListBox listBoxForNums;
-        private System.Windows.Forms.Button buttonDemoMode;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSortArray;
+        private System.Windows.Forms.Button buttonFillArrayWithRandomNumbers;
         private System.Windows.Forms.ListBox listBoxForSelectedNums;
         private System.Windows.Forms.ListBox listBoxForSwapNums;
     }

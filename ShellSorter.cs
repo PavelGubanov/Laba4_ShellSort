@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Laba4_ShellSort
-{
+{  
+    //Класс, описывающий сортировку Шелла
     class ShellSorter
     {
-        public static string selectedNumber = " --> ";
-        
+        public int NumberOfCompares { get; private set; } //количество сравнений
+        public int NumberOfSwaps { get; private set; } //количество перестановок
+        public static string selectedNumber = "--> "; //показывает, что элемент отобран
+                                                      //на текущем шаге для сортировки вставками 
+
+        //Возвращает массив с шагами для заданного количества чисел в массиве по формуле из задания
         private int[] GetStepSeries (int N)
         {
             int sizeSeries = (int)Math.Truncate(Math.Log(N, 3));
@@ -25,18 +29,44 @@ namespace Laba4_ShellSort
             return stepSeries;
         }
 
+        //Отображает числа в отдельном ListBox с заданным шагом
         private void ShowNumsWithStep(ListBox listBoxForNums, ListBox listBoxForSelectedNums, int[]array, int startIndex, int step)
         {
             for (int i = startIndex; i < array.Length; i += step)
             {
-                listBoxForSelectedNums.Items[i] = array[i];
+                listBoxForSelectedNums.Items[i] = array[i];                          
                 listBoxForNums.Items[i] = selectedNumber;
             }
             listBoxForNums.Refresh();
             listBoxForSelectedNums.Refresh();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
+        //Обновляет отсортированные числа в ListBox с выбранными числами
+        private void ShowSortedNumsWithStep(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int[] array, int startIndex, int step, int predNum, int currentNum)
+        {            
+            if (predNum != currentNum)
+            {
+                for (int i = startIndex; i < array.Length; i += step)
+                {
+                    if (i == currentNum)
+                    {
+                        listBoxForSelectedNums.Items[i] = "";
+                    }
+                    else
+                    {
+                        listBoxForSelectedNums.Items[i] = array[i];
+                    }
+                }
+                listBoxForSwapNums.Items[currentNum] = listBoxForSwapNums.Items[predNum];
+                listBoxForSwapNums.Items[predNum] = "";
+                listBoxForSwapNums.Refresh();
+                listBoxForSelectedNums.Refresh();
+                Thread.Sleep(1000);
+            }            
+        }
+
+        //Возвращает все числа обратно в общий ListBox
         private void ReturnAllNumsFromSelectedNums(ListBox listBoxForNums, ListBox listBoxForSelectedNums, int length, int startIndex, int step)
         {
             for (int i = startIndex; i < length; i += step)
@@ -46,72 +76,34 @@ namespace Laba4_ShellSort
             }
             listBoxForNums.Refresh();
             listBoxForSelectedNums.Refresh();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
-        private void ShowCurrentNumberForComparison(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i)
+        //Показывает заданное число в отдельном ListBox
+        private void ShowNumber(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i)
         {
             listBoxForSwapNums.Items[i] = listBoxForSelectedNums.Items[i];
             listBoxForSelectedNums.Items[i] = "";
             listBoxForSwapNums.Refresh();
             listBoxForSelectedNums.Refresh();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
+        //Возвращает заданное число обратно в список отобранных чисел с заданным шагом
         private void ReturnNumber(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i)
         {
             listBoxForSelectedNums.Items[i] = listBoxForSwapNums.Items[i];
             listBoxForSwapNums.Items[i] = "";
             listBoxForSwapNums.Refresh();
             listBoxForSelectedNums.Refresh();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
-        private void ShowCompareNumbers(ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums, int i, int j, bool needExchange)
+        //Сортировка Шелла с отображением в ListBox-ах
+        public void SortForCartoon (int[] array, ListBox listBoxForNums, ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums)
         {
-            ShowCurrentNumberForComparison(listBoxForSelectedNums, listBoxForSwapNums, i);
-            ShowCurrentNumberForComparison(listBoxForSelectedNums, listBoxForSwapNums, j);
-            if (needExchange)
-            {
-                listBoxForSwapNums.BackColor = System.Drawing.Color.Green;
-                listBoxForSwapNums.Refresh();
-                Thread.Sleep(500);
-                listBoxForSwapNums.BackColor = System.Drawing.Color.White;
-                listBoxForSwapNums.Refresh();
-                Thread.Sleep(500);
-            }
-            else
-            {
-                listBoxForSwapNums.BackColor = System.Drawing.Color.Red;
-                listBoxForSwapNums.Refresh();
-                Thread.Sleep(500);
-                listBoxForSwapNums.BackColor = System.Drawing.Color.White;
-                listBoxForSwapNums.Refresh();
-                Thread.Sleep(500);
-            }
-            ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, i);
-            if (needExchange)
-            {
-                for (int k = i; k < j; k++)
-                {
-                    listBoxForSelectedNums.Items[k + 1] = listBoxForSelectedNums.Items[k];
-                }
-                listBoxForSelectedNums.Refresh();
-                Thread.Sleep(500);
-                listBoxForSwapNums.Items[i] = listBoxForSwapNums.Items[j];
-                listBoxForSwapNums.Items[j] = "";
-                listBoxForSwapNums.Refresh();
-                Thread.Sleep(500);
-                ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, i);
-            }
-            else
-            {
-                ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, j);
-            }
-        }
-
-        public void Sort (int[] array, ListBox listBoxForNums, ListBox listBoxForSelectedNums, ListBox listBoxForSwapNums)
-        {
+            NumberOfCompares = 0;
+            NumberOfSwaps = 0;
             int[] stepSeries = GetStepSeries(array.Length); // вычисляем последовательность шагов для заданной размерности массива
             int countSteps = stepSeries.Length; // вычисляем количество шагов
             for (int j = 0; j < countSteps; j++)
@@ -121,23 +113,61 @@ namespace Laba4_ShellSort
                 {
                     ShowNumsWithStep(listBoxForNums, listBoxForSelectedNums, array, p, step);
                     int i = step + p;
-                    while (i <= array.Length)
+                    while (i < array.Length)
                     {
                         int elem = array[i];
+                        ShowNumber(listBoxForSelectedNums, listBoxForSwapNums, i);
                         int l = i - step;
-                        bool needExchande = !(elem < array[l]);
-                        ShowCompareNumbers(listBoxForSelectedNums, listBoxForSwapNums, l, i, needExchande);
-                        while ((l >= 0) && !needExchande)
+                        while ((l >= 0) && CompareNumbers(elem, array[l]))
                         {
+                            ++NumberOfSwaps;
                             array[l + step] = array[l];
-                            l -= step;
-                            needExchande = !(elem < array[l]);
-                            ShowCompareNumbers(listBoxForSelectedNums, listBoxForSwapNums, l, i, needExchande);
+                            l -= step;                                                        
                         }
+                        ShowSortedNumsWithStep(listBoxForSelectedNums, listBoxForSwapNums, array, p, step, i, l + step);
+                        ReturnNumber(listBoxForSelectedNums, listBoxForSwapNums, l + step);
                         array[l + step] = elem;
+                        ++NumberOfSwaps;
                         i += step;
                     } // while
                     ReturnAllNumsFromSelectedNums(listBoxForNums, listBoxForSelectedNums, array.Length, p, step);
+                } // for
+            } // for
+        }
+
+        private bool CompareNumbers(int a, int b)
+        {
+            ++NumberOfCompares;
+            return a < b;
+        }
+
+        //Сортировка Шелла для вычисления количества перестановок и количество сравнений для заданного массива чисел
+        public void SortForGraphics(int[] array)
+        {
+            NumberOfCompares = 0;
+            NumberOfSwaps = 0;
+            int[] stepSeries = GetStepSeries(array.Length); // вычисляем последовательность шагов для заданной размерности массива
+            int countSteps = stepSeries.Length; // вычисляем количество шагов
+            for (int j = 0; j < countSteps; j++)
+            {
+                int step = stepSeries[j];
+                for (int p = 0; p < step; p++) // применяем сортировку вставками для всех групп
+                {
+                    int i = step + p;
+                    while (i < array.Length)
+                    {
+                        int elem = array[i];
+                        int l = i - step;
+                        while ((l >= 0) && CompareNumbers(elem, array[l]))
+                        {
+                            ++NumberOfSwaps;
+                            array[l + step] = array[l];
+                            l -= step;
+                        }
+                        array[l + step] = elem;
+                        ++NumberOfSwaps;
+                        i += step;
+                    } // while
                 } // for
             } // for
         }

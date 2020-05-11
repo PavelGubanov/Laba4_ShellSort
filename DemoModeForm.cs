@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Laba4_ShellSort
 {
+    //Форма для отображения процесса сортировки Шелла для целых чисел
     public partial class DemoModeForm : Form
     {
-        int[] array = new int[10];
-        ShellSorter sorter = new ShellSorter();
+        int[] array = new int[10]; //массив для хранения сортируемых чисел
+        ShellSorter sorter = new ShellSorter();//объект для управления сортировкой Шелла
 
         public DemoModeForm()
         {
             InitializeComponent();
         }
-
+        //Рандомное заполнение массива из 10 чисел
         private void buttonFillArrayWithRandomNumbers_Click(object sender, EventArgs e)
         {
             listBoxForNums.Items.Clear();
@@ -44,10 +38,12 @@ namespace Laba4_ShellSort
                 listBoxForSwapNums.Items.Add("");
             }
         }
-
+        //Начать показ сортировки
         private void buttonSortArray_Click(object sender, EventArgs e)
         {
-            sorter.Sort(array, listBoxForNums, listBoxForSelectedNums, listBoxForSwapNums);
+            sorter.SortForCartoon(array, listBoxForNums, listBoxForSelectedNums, listBoxForSwapNums);
+            string text = "Сортировка окончена!\nЧисло перестановок: " + sorter.NumberOfSwaps + "\nЧисло сравнений: " + sorter.NumberOfCompares;
+            MessageBox.Show(this, text, "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

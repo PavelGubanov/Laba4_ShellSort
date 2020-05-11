@@ -54,6 +54,7 @@
             this.buttonOperationMode.TabIndex = 1;
             this.buttonOperationMode.Text = "Operation Mode";
             this.buttonOperationMode.UseVisualStyleBackColor = false;
+            this.buttonOperationMode.Click += new System.EventHandler(this.buttonOperationMode_Click);
             // 
             // MainForm
             // 
